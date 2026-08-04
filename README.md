@@ -40,9 +40,52 @@ pytest tests/
 ## Project Structure
 
 
-docs/ - Test documentation
-tests/ - Automation scripts
-test_data/ - Test data files
-reports/ - Test execution reports
+bynry-qa-automation-case-study
+
+├── docs
+│ ├── Part1_Flaky_Test_Analysis.md
+│ ├── Framework_Design.md
+│ └── Part3_API_UI_Integration.md
+│
+├── tests
+│ ├── test_flaky_login.py
+│ └── test_project_creation.py
+│
+├── test_data
+│ └── users.json
+│
+├── reports
+│ └── test_execution_report.md
+│
+├── requirements.txt
+└── README.md
 
 
+## Case Study Coverage
+
+### Part 1: Flaky Test Debugging
+
+- Identified flaky test causes
+- Added proper waits
+- Improved CI/CD reliability
+
+
+### Part 2: Framework Design
+
+Designed a scalable automation framework supporting:
+
+- Web testing
+- API testing
+- Mobile testing
+- Multiple tenants
+- Different user roles
+
+
+### Part 3: API + UI Integration
+
+Implemented approach for:
+
+- Creating projects through API
+- Validating projects in UI
+- Mobile validation
+- Tenant isolation testing

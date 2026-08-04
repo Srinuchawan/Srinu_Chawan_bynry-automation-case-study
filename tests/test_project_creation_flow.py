@@ -3,25 +3,21 @@ import uuid
 from playwright.sync_api import sync_playwright, expect
 
 
-# Test configuration
+# Application details
 API_URL = "https://api.workflowpro.com"
-WEB_URL = "https://company1.workflowpro.com"
 
-COMPANY1_ID = "company1"
-COMPANY2_ID = "company2"
+COMPANY1 = "company1"
+COMPANY2 = "company2"
 
 
-def create_project_api():
+# Step 1: Create project using API
+def create_project():
 
-    """
-    Creates project using backend API
-    """
+    project_name = "Test_Project_" + str(uuid.uuid4())
 
-    project_name = "Automation_Test_Project_" + str(uuid.uuid4())
-
-    payload = {
+    data = {
         "name": project_name,
-        "description": "Created through automation",
+        "description": "Created by automation test",
         "team_members": [
             "user1"
         ]
@@ -29,31 +25,31 @@ def create_project_api():
 
     headers = {
         "Authorization": "Bearer test_token",
-        "X-Tenant-ID": COMPANY1_ID
+        "X-Tenant-ID": COMPANY1
     }
 
 
     response = requests.post(
-        f"{API_URL}/api/v1/projects",
-        json=payload,
+        API_URL + "/api/v1/projects",
+        json=data,
         headers=headers
     )
 
 
+    # Check API response
     assert response.status_code == 200
 
 
     project = response.json()
 
-    return project
+    assert project["name"] == project_name
+
+    return project_name
 
 
 
+# Login function
 def login(page, tenant):
-
-    """
-    Login helper function
-    """
 
     page.goto(
         f"https://{tenant}.workflowpro.com/login"
@@ -79,26 +75,14 @@ def login(page, tenant):
 
 
 
+# Main Integration Test
 def test_project_creation_flow():
 
-    # ----------------------------
-    # Step 1:
-    # Create project using API
-    # ----------------------------
 
-    project = create_project_api()
+    # 1. Create project through API
 
+    project_name = create_project()
 
-    project_id = project["id"]
-
-    project_name = project["name"]
-
-
-
-    # ----------------------------
-    # Step 2:
-    # Verify project in Web UI
-    # ----------------------------
 
 
     with sync_playwright() as p:
@@ -112,13 +96,14 @@ def test_project_creation_flow():
         page = browser.new_page()
 
 
+
+        # 2. Verify project in Company1 UI
+
         login(
             page,
-            COMPANY1_ID
+            COMPANY1
         )
 
-
-        # Search project
 
         page.fill(
             "#project-search",
@@ -127,11 +112,8 @@ def test_project_creation_flow():
 
 
         expect(
-            page.locator(
-                ".project-card"
-            )
+            page.locator(".project-card")
         ).to_be_visible()
-
 
 
         assert project_name in page.text_content(
@@ -140,15 +122,11 @@ def test_project_creation_flow():
 
 
 
-        # ----------------------------
-        # Step 3:
-        # Tenant Isolation Testing
-        # ----------------------------
-
+        # 3. Verify tenant isolation
 
         login(
             page,
-            COMPANY2_ID
+            COMPANY2
         )
 
 
@@ -171,28 +149,26 @@ def test_project_creation_flow():
 
 
 
-def test_mobile_validation_browserstack():
+# BrowserStack mobile testing example
 
-    """
-    BrowserStack mobile execution example.
-
-    In real execution, BrowserStack credentials
-    and capabilities will be configured.
-    """
+def test_mobile_testing_example():
 
 
-    capabilities = {
+    mobile_device = {
 
-        "deviceName": "iPhone 14",
+        "device": "iPhone 14",
 
-        "browserName": "Safari",
+        "browser": "Safari",
 
-        "platformName": "iOS"
+        "platform": "iOS"
 
     }
 
 
-    # Connect Playwright with BrowserStack
-    # and execute same validation flow
+    # In real project:
+    # This configuration will be connected
+    # with BrowserStack remote browser.
 
-    assert capabilities["deviceName"] == "iPhone 14"
+
+    assert mobile_device["device"] == "iPhone 14"
+    

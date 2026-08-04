@@ -1,11 +1,13 @@
 {
     "admin": {
         "email": "admin@company1.com",
+        "password": "password123",
         "tenant": "Company1",
         "role": "Admin"
     },
     "employee": {
         "email": "user@company2.com",
+        "password": "password123",
         "tenant": "Company2",
         "role": "Employee"
     }
